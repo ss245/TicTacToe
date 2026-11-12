@@ -1,6 +1,7 @@
 package TicTacToe.Controllers;
 
 import TicTacToe.Exceptions.InvalidBotCountException;
+import TicTacToe.Exceptions.InvalidMoveException;
 import TicTacToe.Exceptions.InvalidPlayerCountException;
 import TicTacToe.Models.Game;
 import TicTacToe.Models.GameState;
@@ -16,7 +17,7 @@ public class GameController {
          return Game.getBuilder().setDimension(dimension).setPlayers(players).setWinningStrategies(winningStrategies).Build();
     }
 
-    public void makeMove(Game game){
+    public void makeMove(Game game) throws InvalidMoveException {
         game.makeMove();
     }
 

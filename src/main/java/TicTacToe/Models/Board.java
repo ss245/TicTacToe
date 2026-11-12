@@ -41,7 +41,7 @@ public class Board {
                     System.out.print("| |");
                 }
                 else{
-                    System.out.println("| "+cell.getPlayer().getSymbol());
+                    System.out.print("| "+cell.getPlayer().getSymbol().getaChar());
                 }
             }
             System.out.println();

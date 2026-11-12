@@ -1,6 +1,7 @@
 package TicTacToe.Models;
 
 import TicTacToe.Exceptions.InvalidBotCountException;
+import TicTacToe.Exceptions.InvalidMoveException;
 import TicTacToe.Exceptions.InvalidPlayerCountException;
 import TicTacToe.Strategies.WinningStrategies.WinningStrategies;
 
@@ -37,7 +38,60 @@ public class Game {
         return new Builder();
     }
 
-    public void makeMove() {
+    // Validating the move made by the current player
+    public void validateMove(Board board,Move move) throws InvalidMoveException {
+        int row = move.getCell().getRow();
+        int col = move.getCell().getColumn();
+
+        if(row<0 || row>board.getDimension()-1 || col<0 || col> board.getDimension()-1 || board.getBoard().get(row).get(col).getCellState()==CellState.Filled){
+            throw new InvalidMoveException("Your Move is Invalid");
+        }
+
+    }
+
+    // Method for checking if its the current player who played the move is winner or not
+    public boolean checkWinner(Move move){
+        // Check the row, column,and diagonal(if applicable)
+        for(WinningStrategies winningStrategies1:winningStrategies){
+            if(winningStrategies1.checkWinner(move, board)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public void makeMove() throws InvalidMoveException {
+        // In order to make move first we get the player
+        Player currentPlayer = players.get(nextPlayerMoveIndex);
+        System.out.println("Its "+currentPlayer.getName()+ " 's move");
+        Move move = currentPlayer.makeMove(board);
+
+        //Validate the move made by the current player
+        validateMove(board, move);
+
+
+        // This is valid move and now lets execute this move on to the board
+        int row = move.getCell().getRow();
+        int col = move.getCell().getColumn();
+        Cell cell = board.getBoard().get(row).get(col);
+        cell.setCellState(CellState.Filled);
+        cell.setPlayer(currentPlayer);
+
+        nextPlayerMoveIndex = (nextPlayerMoveIndex+1)%players.size();
+        Move finalMove = new Move(currentPlayer,cell);
+        moves.add(finalMove);
+
+        // Check if its the winning move
+        if(checkWinner(finalMove)){
+            winner = currentPlayer;
+            gameState=GameState.Ended;
+        }
+        else if(moves.size()== board.getDimension()* board.getDimension()){
+            gameState=GameState.Draw;
+        }
     }
 
     public void printBoard() {

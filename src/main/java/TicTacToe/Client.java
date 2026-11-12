@@ -2,6 +2,7 @@ package TicTacToe;
 
 import TicTacToe.Controllers.GameController;
 import TicTacToe.Exceptions.InvalidBotCountException;
+import TicTacToe.Exceptions.InvalidMoveException;
 import TicTacToe.Exceptions.InvalidPlayerCountException;
 import TicTacToe.Models.*;
 import TicTacToe.Strategies.WinningStrategies.ColumnWinningStrategy;
@@ -13,19 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
-    public static void main(String[] args) throws InvalidBotCountException, InvalidPlayerCountException {
+    public static void main(String[] args) throws InvalidBotCountException, InvalidPlayerCountException, InvalidMoveException {
     //  Game game = Game.getBuilder().setDimension(3).setPlayers(new ArrayList<>()).setWinningStrategies(new ArrayList<>()).Build();
-      int dimension = 3;
+      int dimension = 4;
       List<Player> players = new ArrayList<>();
       players.add(new Player("Shivkumar", new Symbol('X'), PlayerType.Human));
       players.add(new Player("Shubham",new Symbol('O'), PlayerType.Human));
+      players.add(new Bot("Intelligent Bot", new Symbol('C'),BotDifficultyLevel.Easy));
       List<WinningStrategies> winningStrategies=new ArrayList<>();
       winningStrategies.add(new RowWinningStrategy());
       winningStrategies.add(new ColumnWinningStrategy());
       winningStrategies.add(new DiagonalWinningStrategy());
       GameController gameController = new GameController();
       Game game = gameController.startGame(dimension,players,winningStrategies);
-      gameController.printBoard(game);
+     // gameController.printBoard(game);
 
       while(game.getGameState().equals(GameState.In_Progress)){
         // Before a Player make a move , he wants to see the board
